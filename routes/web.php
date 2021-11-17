@@ -19,6 +19,8 @@ Route::prefix('kategori')->group(function(){
 Route::prefix('transaksi')->group(function(){
 	Route::resource('transaksi', 'App\Http\Controllers\transaksiController');
 	Route::get('index/{id}', 'App\Http\Controllers\transaksiController@index2');
+	Route::get('filter', 'App\Http\Controllers\transaksiController@filter');
+	Route::post('filter', 'App\Http\Controllers\transaksiController@filterTransaksi')->name('transaksi.filter');
 });
 
 Route::get('tambahDompetMasuk', 'App\Http\Controllers\TransaksiController@create');

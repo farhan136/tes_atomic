@@ -29,13 +29,22 @@ class TransaksiController extends Controller
 
     public function create()
     {
-        $dompet = DB::table('dompets')->orderBy('nama', 'asc')->get();
-        $kategori = DB::table('kategoris')->orderBy('nama', 'asc')->get();
+        $dompet = DB::table('dompets')->where('status_id', 1)->orderBy('nama', 'asc')->get();
+        $kategori = DB::table('kategoris')->where('status_id', 1)->orderBy('nama', 'asc')->get();
         return view('transaksi.tambah', ['dompet'=>$dompet, 'kategori'=>$kategori]);
+    }
+
+    public function filter()
+    {
+        $dompet = DB::table('dompets')->where('status_id', 1)->orderBy('nama', 'asc')->get();
+        $kategori = DB::table('kategoris')->where('status_id', 1)->orderBy('nama', 'asc')->get();
+        return view('laporan.filter', ['dompet'=>$dompet, 'kategori'=>$kategori]);
     }
 
     public function store(Request $request)
     {
+        //Memambahkan dompet masuk dan dompet keluar hanya dari 1 form, akan dikondisikan dibawah
+
         $validated = $request->validate([
             'nilai' => 'required|numeric|min:0',
             'deskripsi'=>'max:255',
@@ -43,6 +52,7 @@ class TransaksiController extends Controller
             'dompet'=>'required'
         ]);
 
+        //jika kategorinya bukan pengeluarana
         if($request->kategori != 2){
             $status = 1;
             $code = 'WIN';
@@ -51,7 +61,7 @@ class TransaksiController extends Controller
             $status = 2;
             $code = "WOUT";
         }
-        
+
         $count = DB::table('transaksis')->where('kode', 'like', $code."%")->count() + 1;
         $count = str_pad($count, 6, "0", STR_PAD_LEFT) ;
         $code = $code . $count++;
@@ -69,6 +79,42 @@ class TransaksiController extends Controller
         $transaksi->save();
         
         return redirect('transaksi/index/0')->with('status', 'Data Baru Berhasil Ditambahkan');
+    }
+
+    public function filterTransaksi(Request $request)
+    {
+        //mengambil data dari form
+        $awal = $request->awal?: '';
+        $akhir = $request->akhir?: '';
+        $status = $request->status?: '';
+        $dompet = $request->dompet?: '';
+        $kategori = $request->kategori?: '';
+
+        $filtered = DB::table('transaksis')
+            ->join('kategoris', 'transaksis.kategori_id', '=', 'kategoris.id')
+            ->join('dompets', 'transaksis.dompet_id', '=', 'dompets.id')
+            ->join('transaksi_status', 'transaksis.status_id', '=', 'transaksi_status.id')
+            ->whereBetween('tanggal', [$awal, $akhir])
+            ->orWhere('transaksis.status_id', $status)
+            ->orWhere('transaksis.dompet_id', $dompet)
+            ->orWhere('transaksis.kategori_id', $kategori)
+        ->get();
+        
+        if($filtered->isEmpty()){
+            $filtered = DB::table('transaksis')
+            ->join('kategoris', 'transaksis.kategori_id', '=', 'kategoris.id')
+            ->join('dompets', 'transaksis.dompet_id', '=', 'dompets.id')
+            ->join('transaksi_status', 'transaksis.status_id', '=', 'transaksi_status.id')
+            ->select('transaksis.tanggal as tanggal',
+                'transaksis.kode as kode',
+                'transaksis.deskripsi as deskripsi',
+                'transaksis.nilai as nilai',
+                'transaksis.status_id as status_id',
+                'dompets.nama as dompet',
+                'kategoris.nama as kategori',)
+            ->get();
+        }
+        return view('laporan.laporan', ["filtered"=>$filtered]);
     }
 
     public function show($id)
