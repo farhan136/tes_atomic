@@ -6,21 +6,15 @@
     {{ session('status') }}
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
-  </button>
+    </button>
 </div>
 @endif
 
 <a href="{{route('transaksi.create')}}" class="btn btn-primary">Buat Baru</a>
-<select name="status" id="filterStatus" class="btn btn-secondary">
-  <option value=""  selected>Filter Status</option>
-  <option value="1">Aktif</option>
-  <option value="2">Tidak Aktif</option>
-</select>
-
 
 <div class="card">
   <div class="card-header">
-    <h3 class="card-title">Dompet Masuk</h3>
+    <h3 class="card-title">Dompet {{$status}}</h3>
     <br>
     
 </div>
@@ -39,17 +33,17 @@
           </tr>
       </thead>
       <tbody>
-          <!-- @foreach($dompet as $d) -->
+          @foreach($transaksi as $t)
           <tr>
-            <!-- <td>{{$loop->iteration}}</td> -->
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{$loop->iteration}}</td>
+            <td>{{$t->tanggal}}</td>
+            <td>{{$t->kode}}</td>
+            <td>{{$t->deskripsi}}</td>
+            <td>Kategori {{$t->kategori->nama}}</td>
+            <td>(+) {{$t->nilai}}</td>
+            <td>Dompet {{$t->dompet->nama}}</td>
         </tr>
-        <!-- @endforeach -->
+        @endforeach
     </tbody>
 </table>
 </div>

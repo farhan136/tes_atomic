@@ -8,98 +8,84 @@ use App\Models\Transaksi;
 
 class TransaksiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index2($kdstatus)
     {
-        //
+        
+        if($kdstatus != 0){
+            $status = $kdstatus;
+        }else{
+            $status = DB::table('transaksis')->select('status_id')->latest('created_at')->first();
+            $status = $status->status_id; 
+        }
+
+        $transaksi = Transaksi::where('status_id', $status)->get();
+        if ($status != 2) {
+            return view('transaksi.dompetmasuk.dmasuk', ['transaksi'=>$transaksi, 'status'=>'Masuk']);
+        }else{
+            return view('transaksi.dompetkeluar.dkeluar', ['transaksi'=>$transaksi, 'status'=>'Keluar']);
+        }
+        
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        $users = DB::table('dompets')->orderBy('nama', 'asc')->get();
-        $users = DB::table('kategoris')->orderBy('nama', 'asc')->get();
-        return view('transaksi.dompetmasuk.tambah', ['dompet'=>$dompet, 'kategori'=>$kategori]);
+        $dompet = DB::table('dompets')->orderBy('nama', 'asc')->get();
+        $kategori = DB::table('kategoris')->orderBy('nama', 'asc')->get();
+        return view('transaksi.tambah', ['dompet'=>$dompet, 'kategori'=>$kategori]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nilai' => 'required|regex:^[1-9][0-9]+|not_in:0',
+            'nilai' => 'required|numeric|min:0',
             'deskripsi'=>'max:255',
             'kategori'=>'required',
-            'dompet'=>'required',
-            'status'=>'required'
+            'dompet'=>'required'
         ]);
 
+        if($request->kategori != 2){
+            $status = 1;
+            $code = 'WIN';
+        }
+        else{
+            $status = 2;
+            $code = "WOUT";
+        }
+        
+        $count = DB::table('transaksis')->where('kode', 'like', $code."%")->count() + 1;
+        $count = str_pad($count, 6, "0", STR_PAD_LEFT) ;
+        $code = $code . $count++;
+        
         $transaksi = new Transaksi;
         $transaksi->nilai = $request->nilai;
         $transaksi->kategori_id = $request->kategori;
         $transaksi->deskripsi = $request->deskripsi;
         $transaksi->dompet_id = $request->dompet;
-        $transaksi->status_id = $request->status;
+        $transaksi->status_id = $status;
+        $transaksi->tanggal = $request->tanggal;
 
-        $transaksi->kode = $request->kode;
+        $transaksi->kode = $code;
 
         $transaksi->save();
         
-        return redirect('transaksi/transaksi')->with('status', 'Data Baru Berhasil Ditambahkan');
+        return redirect('transaksi/index/0')->with('status', 'Data Baru Berhasil Ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //

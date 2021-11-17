@@ -48,7 +48,13 @@
             <td>
                 <a href="{{route('dompet.show', $d->id)}}" class="btn btn-secondary"><i class="fas fa-search">Detail</i></a>
                 <a href="{{route('dompet.edit', $d->id)}}" class="btn btn-secondary"><i class="fas fa-pen">Ubah</i></a>
-                <a href="{{url('dompet/ubahStatus', $d->id)}}" class="btn btn-secondary"><i class="fas fa-times">{{$d->status->nama}}</i></a>
+                <a href="{{url('dompet/ubahStatus', $d->id)}}" class="btn btn-secondary"><i class="fas fa-times"> 
+                  @if($d->status->nama == 'aktif')
+                  tidak aktif
+                  @elseif($d->status->nama == 'tidak aktif')
+                  aktif
+                  @endif
+                </i></a>
             </td>
         </tr>
         @endforeach

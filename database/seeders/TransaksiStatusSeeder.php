@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\TransaksiStatus;
 
 class TransaksiStatusSeeder extends Seeder
 {
@@ -13,6 +14,19 @@ class TransaksiStatusSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $status = 
+        [
+        	[
+	        	'nama'=> 'masuk',
+        	],
+        	[
+        		'nama'=> 'keluar',
+        	]
+        ];
+        foreach ($status as $s) {
+        	$statusTransaksi = new TransaksiStatus;
+        	$statusTransaksi->nama = $s['nama'];
+        	$statusTransaksi->save();
+        }
     }
 }

@@ -46,7 +46,13 @@
             <td>
                 <a href="{{route('kategori.show', $d->id)}}" class="btn btn-secondary"><i class="fas fa-search">Detail</i></a>
                 <a href="{{route('kategori.edit', $d->id)}}" class="btn btn-secondary"><i class="fas fa-pen">Ubah</i></a>
-                <a href="{{url('kategori/ubahStatus', $d->id)}}" class="btn btn-secondary"><i class="fas fa-times">{{$d->status->nama}}</i></a>
+                <a href="{{url('kategori/ubahStatus', $d->id)}}" class="btn btn-secondary"><i class="fas fa-times">
+                  @if($d->status->nama == 'aktif')
+                  tidak aktif
+                  @elseif($d->status->nama == 'tidak aktif')
+                  aktif
+                  @endif
+                </i></a>
             </td>
         </tr>
         @endforeach
