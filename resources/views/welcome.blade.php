@@ -1,3 +1,8 @@
+<?php 
+$PARENTTAG = isset($PARENTTAG)? $PARENTTAG: '';
+$CHILDTAG = isset($CHILDTAG)? $CHILDTAG: '' ;
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,12 +46,7 @@
         <li class="nav-item">
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
-        <li class="nav-item d-none d-sm-inline-block">
-          <a href="index3.html" class="nav-link">Home</a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
-          <a href="#" class="nav-link">Contact</a>
-        </li>
+
       </ul>
 
       <!-- Right navbar links -->
@@ -87,7 +87,7 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <li class="nav-item menu-is-opening menu-open">
+            <li class="nav-item has-treeview {{$PARENTTAG == 'master'? 'menu-open' : ''}}">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-chart-pie"></i>
                 <p>
@@ -97,13 +97,13 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="{{url('/')}}" class="nav-link">
+                  <a href="{{url('/')}}" class="nav-link {{$CHILDTAG == 'dompet'? 'active' : ''}}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Dompet</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{route('kategori.index')}}" class="nav-link">
+                  <a href="{{route('kategori.index')}}" class="nav-link {{$CHILDTAG == 'kategori'? 'active' : ''}}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Kategori</p>
                   </a>
@@ -113,7 +113,7 @@
           </ul>
 
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <li class="nav-item menu-is-opening menu-open">
+            <li class="nav-item has-treeview menu-open">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-chart-pie"></i>
                 <p>
@@ -139,7 +139,7 @@
           </ul>
 
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <li class="nav-item menu-is-opening menu-open">
+            <li class="nav-item has-treeview menu-open">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-chart-pie"></i>
                 <p>
@@ -180,6 +180,7 @@
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item active">Dashboard v1</li>
+                <a href="/logout" class="btn btn-warning">Logout</a>
               </ol>
             </div><!-- /.col -->
           </div><!-- /.row -->
@@ -247,6 +248,10 @@
   <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-ajax-uploader/2.6.7/SimpleAjaxUploader.min.js"></script> 
+
+  <script src="https://malsup.github.io/jquery.form.js"></script> 
 
   @yield('scripttambahan')
 

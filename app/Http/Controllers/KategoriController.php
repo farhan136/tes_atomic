@@ -10,25 +10,14 @@ class KategoriController extends Controller
     public function index()
     {
         $kategori = Kategori::all();
-        return view('master.kategori.kategori', ['kategori'=>$kategori]);
+        return view('master.kategori.kategori', ['kategori'=>$kategori, 'PARENTTAG'=>'master', 'CHILDTAG'=>'kategori']);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        return view('master.kategori.tambah');
+        return view('master.kategori.tambah', ['PARENTTAG'=>'master', 'CHILDTAG'=>'kategori']);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -46,37 +35,18 @@ class KategoriController extends Controller
         return redirect('kategori/kategori')->with('status', 'Data Baru Berhasil Ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $kategori = Kategori::find($id);
-        return view('master.kategori.detail', ['kategori'=>$kategori]);
+        return view('master.kategori.detail', ['kategori'=>$kategori, 'PARENTTAG'=>'master', 'CHILDTAG'=>'kategori']);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $kategori = Kategori::find($id);
-        return view('master.kategori.ubah', ['kategori'=>$kategori]);
+        return view('master.kategori.ubah', ['kategori'=>$kategori, 'PARENTTAG'=>'master', 'CHILDTAG'=>'kategori']);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -94,12 +64,6 @@ class KategoriController extends Controller
         return redirect('kategori/kategori')->with('status', 'Data Berhasil Diubah');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function ubahStatus($id)
     {
         $kategori = Kategori::find($id);

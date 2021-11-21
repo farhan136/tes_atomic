@@ -4,18 +4,50 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Dompet;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\DB;
 
 class DompetController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $dompet = Dompet::all();
-        return view('master.dompet.dompet', ['dompet'=>$dompet]);
+        // $dompet = Dompet::all();
+        $dompet = DB::table('dompets')
+        ->join('dompet_status', 'dompets.status_id', '=', 'dompet_status.id')
+        ->select(
+            'dompets.id as id',
+            'dompets.nama as nama',
+            'dompets.referensi as referensi',
+            'dompets.deskripsi as deskripsi',
+            'dompet_status.nama as status'
+        )->get();
+        // dd($dompet);
+
+        if ($request->ajax()) {
+            return Datatables()->of($dompet)
+            ->addColumn('aksi', function($item){
+                
+                return '
+                    <a href="'. route('dompet.edit', $item->id) .'" class="btn btn-secondary">
+                        <i class="fas fa-pen"></i>
+                    </a>
+                    <a href="'. route('dompet.show', $item->id) .'" class="btn btn-secondary">
+                        <i class="fas fa-search"></i>
+                    </a>
+                    <a href="'. url('dompet/ubahStatus', $item->id) .'"class="btn btn-secondary"> 
+                    <i class="fas fa-times"></i>
+                    </a>
+                ';
+            })->rawColumns(['aksi'])
+            ->make();
+        }
+
+        return view('master.dompet.dompet', ['dompet'=>$dompet, 'PARENTTAG'=>'master', 'CHILDTAG'=>'dompet']);
     }
 
     public function create()
     {
-        return view('master.dompet.tambah');
+        return view('master.dompet.tambah', ['PARENTTAG'=>'master', 'CHILDTAG'=>'dompet']);
     }
 
     public function store(Request $request)
@@ -33,13 +65,14 @@ class DompetController extends Controller
         $dompet->status_id = $request->status;
         $dompet->save();
         
-        return redirect('/')->with('status', 'Data Baru Berhasil Ditambahkan');
+        
+        return response()->json(true);   
     }
 
     public function show($id)
     {
         $dompet = Dompet::find($id);
-        return view('master.dompet.detail', ['dompet'=>$dompet]);
+        return view('master.dompet.detail', ['dompet'=>$dompet, 'PARENTTAG'=>'master', 'CHILDTAG'=>'dompet']);
     }
 
     /**
@@ -51,7 +84,7 @@ class DompetController extends Controller
     public function edit($id)
     {
         $dompet = Dompet::find($id);
-        return view('master.dompet.ubah', ['dompet'=>$dompet]);
+        return view('master.dompet.ubah', ['dompet'=>$dompet, 'PARENTTAG'=>'master', 'CHILDTAG'=>'dompet']);
     }
 
     public function update(Request $request, $id)
