@@ -11,7 +11,6 @@ class DompetController extends Controller
 {
     public function index(Request $request)
     {
-        // $dompet = Dompet::all();
         $dompet = DB::table('dompets')
         ->join('dompet_status', 'dompets.status_id', '=', 'dompet_status.id')
         ->select(
@@ -28,9 +27,9 @@ class DompetController extends Controller
             ->addColumn('aksi', function($item){
                 
                 return '
-                    <a href="'. route('dompet.edit', $item->id) .'" class="btn btn-secondary">
+                    <button class="btn btn-secondary tombol'.$item->id.'" data-toggle="modal" data-target="#editModal" id="tombol_edit" data-id="'.$item->id.'">
                         <i class="fas fa-pen"></i>
-                    </a>
+                    </button>
                     <a href="'. route('dompet.show', $item->id) .'" class="btn btn-secondary">
                         <i class="fas fa-search"></i>
                     </a>
@@ -84,7 +83,8 @@ class DompetController extends Controller
     public function edit($id)
     {
         $dompet = Dompet::find($id);
-        return view('master.dompet.ubah', ['dompet'=>$dompet, 'PARENTTAG'=>'master', 'CHILDTAG'=>'dompet']);
+        
+        return response()->json($dompet);
     }
 
     public function update(Request $request, $id)
@@ -94,7 +94,7 @@ class DompetController extends Controller
             'deskripsi'=>'max:255',
             'status'=>'required'
         ]);
-
+        $id = $request->id;
         $dompet = Dompet::find($id);
         $dompet->nama = $request->nama;
         $dompet->referensi = $request->referensi;
@@ -102,7 +102,8 @@ class DompetController extends Controller
         $dompet->status_id = $request->status;
         $dompet->save();
         
-        return redirect('/')->with('status', 'Data Berhasil Diubah');
+        // return redirect('/')->with('status', 'Data Berhasil Diubah');
+        return response()->json(true);
     }
 
     /**

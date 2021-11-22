@@ -212,7 +212,7 @@ $CHILDTAG = isset($CHILDTAG)? $CHILDTAG: '' ;
   <!-- ./wrapper -->
 
   <!-- jQuery -->
-  <script src="{{asset('/template/plugins/jquery/jquery.min.js')}}"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <!-- jQuery UI 1.11.4 -->
   <script src="{{asset('/template/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
   <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -220,7 +220,7 @@ $CHILDTAG = isset($CHILDTAG)? $CHILDTAG: '' ;
     $.widget.bridge('uibutton', $.ui.button)
   </script>
   <!-- Bootstrap 4 -->
-  <script src="{{asset('/template/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <!-- ChartJS -->
   <script src="{{asset('/template/plugins/chart.js/Chart.min.js')}}"></script>
   <!-- Sparkline -->
@@ -245,7 +245,8 @@ $CHILDTAG = isset($CHILDTAG)? $CHILDTAG: '' ;
   <script src="{{asset('/template/dist/js/demo.js')}}"></script>
   <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
   <script src="{{asset('/template/dist/js/pages/dashboard.js')}}"></script>
-  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  
+  
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
 
