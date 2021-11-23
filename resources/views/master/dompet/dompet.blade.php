@@ -75,7 +75,8 @@
       $('#form-create').ajaxSubmit({
         success:function(res){
             $('#form-create').trigger("reset"); //mereset data form setelah mengirim data ke database
-            $('#tutupModal').trigger('click');
+            $('#tutupModal').trigger('click'); //tutup modal
+            tabel.ajax.reload(); //reload datatable
           }
         })
 
@@ -112,7 +113,8 @@
               $('#form-edit').ajaxSubmit({
                 success:function(res){
                   $('#form-edit').trigger("reset"); //mereset data form setelah mengirim data ke database
-                  $('#tutupModal').trigger('click');
+                  $('#tutupModalEdit').trigger('click');
+                  tabel.ajax.reload();
                 }
               })
 
