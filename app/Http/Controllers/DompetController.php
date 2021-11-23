@@ -33,9 +33,9 @@ class DompetController extends Controller
                     <a href="'. route('dompet.show', $item->id) .'" class="btn btn-secondary">
                         <i class="fas fa-search"></i>
                     </a>
-                    <a href="'. url('dompet/ubahStatus', $item->id) .'"class="btn btn-secondary"> 
-                    <i class="fas fa-times"></i>
-                    </a>
+                    <button class="btn btn-secondary" data-id="'.$item->id.'" id="tombol_ubah_status"> 
+                        <i class="fas fa-times"></i>
+                    </button>
                 ';
             })->rawColumns(['aksi'])
             ->make();
@@ -121,6 +121,7 @@ class DompetController extends Controller
             $dompet->status_id = 1;
         }
         $dompet->save();
-        return redirect('/')->with('status', 'Status Telah Berubah');
+        // return redirect('/')->with('status', 'Status Telah Berubah');
+        return response()->json(true);
     }
 }

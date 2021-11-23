@@ -86,7 +86,6 @@
         //ketika id tombol_edit yang ada pada tag body di klik maka
         $('body').on('click', '#tombol_edit', function () {
           let data_id = $(this).data('id'); //mengambil id yang dikirim dari atribut data-id
-          console.log(data_id);
 
           $('.tombol'+data_id).trigger('show');
           $('#form-edit').attr('action', '{{route("dompet.update", '+ data_id +')}}') //set atribut action
@@ -103,6 +102,7 @@
 
             $('#form-edit').on('submit', function(e){ //jika form-edit di submit maka jalankan function berikut
               e.preventDefault();
+
               // $.post({
               //   url: 'dompet/dompet/' + data_id, //post data ke url
               //   success: function(res){
@@ -124,6 +124,21 @@
 
 
         });
+
+        $('body').on('click','#tombol_ubah_status',  function () {
+          let data_id = $(this).data('id');
+          
+          $.ajax('dompet/ubahStatus/' + data_id, 
+            {
+                success: function (res) {// success callback function
+                  alert('status berhasil diubah')
+                  tabel.ajax.reload()
+                }
+            }
+          )
+
+        })
+
       } );
     </script>
     @endsection
