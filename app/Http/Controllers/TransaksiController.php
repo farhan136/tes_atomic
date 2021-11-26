@@ -98,7 +98,14 @@ class TransaksiController extends Controller
             ->orWhere('transaksis.status_id', $status)
             ->orWhere('transaksis.dompet_id', $dompet)
             ->orWhere('transaksis.kategori_id', $kategori)
-        ->get();
+            ->select('transaksis.tanggal as tanggal',
+                'transaksis.kode as kode',
+                'transaksis.deskripsi as deskripsi',
+                'transaksis.nilai as nilai',
+                'transaksis.status_id as status_id',
+                'dompets.nama as dompet',
+                'kategoris.nama as kategori',)
+            ->get();
         
         if($filtered->isEmpty()){
             $filtered = DB::table('transaksis')

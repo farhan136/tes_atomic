@@ -18,6 +18,21 @@
   <option value="1">Aktif</option>
   <option value="2">Tidak Aktif</option>
 </select>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#importExcel">
+  Import Excel
+</button>
+<a download href="{{route('export-to-excel')}}" class="btn btn-success">Export ke Excel</a>
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 
 
 <div class="card">
@@ -47,6 +62,8 @@
 
 @include('master.dompet.ubah')
 
+@include('master.dompet.importexcel')
+
 @endsection  
 
 @section('scripttambahan')
@@ -67,7 +84,7 @@
       { data :"status", name: "status"},
       { data :"aksi", name: "aksi", searchable:false, sortable:false},
       ],
-      lengthMenu:[[10,15,25], ["splh","lmbls","dwplhlm"]]
+      lengthMenu:[[10,15,25, -1], ["splh","lmbls","dwplhlm", "semua"]],
     });
 
     $('#form-create').on('submit', function(e){ //jika form-create di submit maka jalankan function berikut
@@ -127,15 +144,17 @@
 
         $('body').on('click','#tombol_ubah_status',  function () {
           let data_id = $(this).data('id');
-          
-          $.ajax('dompet/ubahStatus/' + data_id, 
+          const _c = confirm('Apakah anda yakin?')
+          if (_c==true) {
+            $.ajax('dompet/ubahStatus/' + data_id, 
             {
-                success: function (res) {// success callback function
-                  alert('status berhasil diubah')
-                  tabel.ajax.reload()
-                }
-            }
-          )
+                    success: function (res) {// success callback function
+                      tabel.ajax.reload(null, false)
+                    }
+                  }
+                  )  
+          }
+          
 
         })
 

@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Dompet;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\DompetsImport;
+use App\Exports\DompetsExport;
 
 class DompetController extends Controller
 {
@@ -20,22 +23,21 @@ class DompetController extends Controller
             'dompets.deskripsi as deskripsi',
             'dompet_status.nama as status'
         )->get();
-        // dd($dompet);
 
         if ($request->ajax()) {
             return Datatables()->of($dompet)
             ->addColumn('aksi', function($item){
-                
+
                 return '
-                    <button class="btn btn-secondary tombol'.$item->id.'" data-toggle="modal" data-target="#editModal" id="tombol_edit" data-id="'.$item->id.'">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                    <a href="'. route('dompet.show', $item->id) .'" class="btn btn-secondary">
-                        <i class="fas fa-search"></i>
-                    </a>
-                    <button class="btn btn-secondary" data-id="'.$item->id.'" id="tombol_ubah_status"> 
-                        <i class="fas fa-times"></i>
-                    </button>
+                <button class="btn btn-secondary tombol'.$item->id.'" data-toggle="modal" data-target="#editModal" id="tombol_edit" data-id="'.$item->id.'">
+                <i class="fas fa-pen"></i>
+                </button>
+                <a href="'. route('dompet.show', $item->id) .'" class="btn btn-secondary">
+                <i class="fas fa-search"></i>
+                </a>
+                <button class="btn btn-secondary" data-id="'.$item->id.'" id="tombol_ubah_status"> 
+                <i class="fas fa-times"></i>
+                </button>
                 ';
             })->rawColumns(['aksi'])
             ->make();
@@ -106,12 +108,6 @@ class DompetController extends Controller
         return response()->json(true);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function ubahStatus($id)
     {
         $dompet = Dompet::find($id);
@@ -123,5 +119,33 @@ class DompetController extends Controller
         $dompet->save();
         // return redirect('/')->with('status', 'Status Telah Berubah');
         return response()->json(true);
+    }
+
+    public function import(request $request) 
+    {
+        try {
+            $file = $request->file('excel');
+
+            Excel::import(new DompetsImport, $file);
+
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+             $failures = $e->failures();
+             
+             foreach ($failures as $failure) {
+                 $failure->row(); // row that went wrong
+                 $failure->attribute(); // either heading key (if using heading row concern) or column index
+                 $failure->errors(); // Actual error messages from Laravel validator
+                 $failure->values(); // The values of the row that has failed.
+             }
+
+             return redirect()->back()->withErrors($failures);
+        }
+        
+        return redirect()->back()->with('status', 'Data berhasil ditambahkan melalui excel');
+    }
+
+    public function export() 
+    {
+        return Excel::download(new DompetsExport, 'dompet.xlsx');
     }
 }

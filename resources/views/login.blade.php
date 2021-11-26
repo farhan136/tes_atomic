@@ -95,6 +95,15 @@
       }
     })
   });
+  // var i = 7
+
+   
+  // for( i=1; i>=7; i++){
+  //   var a = 3^i;
+  //   var b = 3 + a
+  //   // console.log(7 * a)
+  //   console.log(b)
+  // }
 </script>
 </body>
 </html>

@@ -9,6 +9,8 @@ class Dompet extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['nama', 'referensi', 'deskripsi', 'status_id'];
+
     public function status()
     {
     	return $this->belongsTo(DompetStatus::class, 'status_id', 'id');

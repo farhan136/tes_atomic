@@ -14,7 +14,8 @@ Route::group(['middleware'=>'auth'], function(){ //yang berada didalam group ini
 	Route::prefix('dompet')->group(function(){
 		Route::resource('dompet', 'App\Http\Controllers\DompetController');	
 		Route::get('ubahStatus/{id}', 'App\Http\Controllers\DompetController@ubahStatus');
-
+		Route::post('import-excel', 'App\Http\Controllers\DompetController@import')->name('import-excel');		
+		Route::get('export-to-excel', 'App\Http\Controllers\DompetController@export')->name('export-to-excel');
 	});
 
 	Route::prefix('kategori')->group(function(){

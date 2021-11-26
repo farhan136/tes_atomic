@@ -1,0 +1,31 @@
+Input : 7
+
+Output : 3, 3, 6, 9,  15, 24, 39
+
+
+a := 3
+	b := 3
+	
+	input := 7
+	i:=0
+	
+	
+	string :=  fmt.Sprintf("%d , %d", a, b)
+	
+	for{
+		
+		next := a + b
+		
+		string = fmt.Sprintf("%s, %d", string, next )
+		if i == input -3{
+			break
+		}
+		a = b
+		b = next
+		i++
+	}
+	
+	fmt.Println(string)
+Input : 7691
+
+Output : 11 Detik , 8 menit , 2 jam

@@ -9,6 +9,11 @@ class OtentikasiController extends Controller
 {
     public function login(Request $request)
     {
+        // $ss = 7691;
+        // $menit = floor(($ss%3600)/60);
+        // $h = (floor($ss/3600));
+        // $d = floor($ss%60); 
+        // dd($d. ' detik '.$menit. ' menit '. $h. ' Jam');
         return view('login');
     }
 
