@@ -39,7 +39,13 @@ class DompetController extends Controller
                 <i class="fas fa-times"></i>
                 </button>
                 ';
-            })->rawColumns(['aksi'])
+            })->addColumn('cb', function($item){
+
+                return '
+                <input id="cb-child" type="checkbox" data-id="'.$item->id.'">
+                </input>
+                ';
+            })->rawColumns(['cb', 'aksi'])
             ->make();
         }
 

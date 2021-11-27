@@ -24,13 +24,13 @@
 <a download href="{{route('export-to-excel')}}" class="btn btn-success">Export ke Excel</a>
 
 @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+<div class="alert alert-danger">
+  <ul>
+    @foreach ($errors->all() as $error)
+    <li>{{ $error }}</li>
+    @endforeach
+  </ul>
+</div>
 @endif
 
 
@@ -46,7 +46,9 @@
     <table id="example" class="table table-bordered table-striped">
       <thead>
         <tr>
-          <!-- <th>No</th> -->
+          <th>
+            <input type="checkbox" name="cb-head" id="cb-head">
+          </th>
           <th>Nama</th>
           <th>Referensi</th>
           <th>Deskripsi</th>
@@ -78,6 +80,7 @@
       },
       autowidth : true,
       columns:[
+      { data :"cb", name: "cb-head", searchable:false, sortable:false},
       { data :"nama", name: "nama"},
       { data :"referensi", name: "referensi"},
       { data :"deskripsi", name: "deskripsi"},
@@ -156,6 +159,29 @@
           }
           
 
+        })
+
+        $('#cb-head').change(function(){
+          if($(this).is(':checked')){
+            $('[id="cb-child"]').prop("checked", true);//'[id="cb-child"]' untuk mengambil semua item yang memiliki id cb-child
+
+          }else{
+            $('[id="cb-child"]').prop("checked", false);
+          }
+        });
+
+        // $('#example').change(function(){
+        //   alert("halo");
+        // })        
+        $("#example").on('click','.cb-child',function(){
+          if($(this).prop('checked')!=true){
+            $("#cb-head").prop('checked',false)
+          }
+          // let semua_checkbox = $("#table tbody .cb-child:checked")
+          // let button_non_aktif_status = (semua_checkbox.length>0)
+          // let button_export_terpilih_status = button_non_aktif_status;
+          // $("#button-nonaktif-all,#button-export-terpilih").prop('disabled',!button_non_aktif_status)
+          // $("#button-aktif-all,#button-export-terpilih").prop('disabled',!button_non_aktif_status)
         })
 
       } );
