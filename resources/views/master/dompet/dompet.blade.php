@@ -22,7 +22,9 @@
   Import Excel
 </button>
 <a download href="{{route('export-to-excel')}}" class="btn btn-success">Export ke Excel</a>
-
+<button type="button" class="btn btn-danger" id="ubah-status" disabled>
+  Ubah Status
+</button>
 @if ($errors->any())
 <div class="alert alert-danger">
   <ul>
@@ -70,6 +72,7 @@
 
 @section('scripttambahan')
 <script>
+  let yangDiCheck = 0;
   $(document).ready(function() {
     const tabel = $('#example').DataTable({
       serverSide: true,
@@ -102,88 +105,105 @@
 
     });
 
-        //TOMBOL EDIT DATA PER PEGAWAI DAN TAMPIKAN DATA BERDASARKAN ID PEGAWAI KE MODAL
-        //ketika id tombol_edit yang ada pada tag body di klik maka
-        $('body').on('click', '#tombol_edit', function () {
-          let data_id = $(this).data('id'); //mengambil id yang dikirim dari atribut data-id
-
-          $('.tombol'+data_id).trigger('show');
-          $('#form-edit').attr('action', '{{route("dompet.update", '+ data_id +')}}') //set atribut action
-
-
-          $.get('dompet/dompet/' + data_id + '/edit', function(data){
-
-            //set value masing-masing id berdasarkan data yg diperoleh dari ajax get request diatas               
-            $('#idedit').val(data.id);
-            $('#editnama').val(data.nama);
-            $('#editreferensi').val(data.referensi);
-            $('#editdeskripsi').val(data.deskripsi);
-            $('input:radio[name="editStatus"][value="'+data.status_id+'"]').attr('checked',true);
-
-            $('#form-edit').on('submit', function(e){ //jika form-edit di submit maka jalankan function berikut
-              e.preventDefault();
-
-              // $.post({
-              //   url: 'dompet/dompet/' + data_id, //post data ke url
-              //   success: function(res){
-              //     $('#form-edit').trigger("reset"); //mereset data form setelah mengirim data ke database
-              //     $('#tutupModal').trigger('click');
-              //   }});
-
-              $('#form-edit').ajaxSubmit({
-                success:function(res){
-                  $('#form-edit').trigger("reset"); //mereset data form setelah mengirim data ke database
-                  $('#tutupModalEdit').trigger('click');
-                  tabel.ajax.reload();
-                }
-              })
-
-            });
-
-          });
+    //TOMBOL EDIT DATA PER PEGAWAI DAN TAMPIKAN DATA BERDASARKAN ID PEGAWAI KE MODAL
+    //ketika id tombol_edit yang ada pada tag body di klik maka
+    $('body').on('click', '#tombol_edit', function () {
+      let data_id = $(this).data('id'); //mengambil id yang dikirim dari atribut data-id
+      $('.tombol'+data_id).trigger('show');
+      $('#form-edit').attr('action', '{{route("dompet.update", '+ data_id +')}}') //set atribut action
 
 
+      $.get('dompet/dompet/' + data_id + '/edit', function(data){
+
+        //set value masing-masing id berdasarkan data yg diperoleh dari ajax get request diatas               
+        $('#idedit').val(data.id);
+        $('#editnama').val(data.nama);
+        $('#editreferensi').val(data.referensi);
+        $('#editdeskripsi').val(data.deskripsi);
+        $('input:radio[name="editStatus"][value="'+data.status_id+'"]').attr('checked',true);
+
+        $('#form-edit').on('submit', function(e){ //jika form-edit di submit maka jalankan function berikut
+          e.preventDefault();
+
+          // $.post({
+          //   url: 'dompet/dompet/' + data_id, //post data ke url
+          //   success: function(res){
+          //     $('#form-edit').trigger("reset"); //mereset data form setelah mengirim data ke database
+          //     $('#tutupModal').trigger('click');
+          //   }});
+
+          $('#form-edit').ajaxSubmit({
+            success:function(res){
+              $('#form-edit').trigger("reset"); //mereset data form setelah mengirim data ke database
+              $('#tutupModalEdit').trigger('click');
+              tabel.ajax.reload();
+            }
+          })
         });
 
-        $('body').on('click','#tombol_ubah_status',  function () {
-          let data_id = $(this).data('id');
-          const _c = confirm('Apakah anda yakin?')
-          if (_c==true) {
-            $.ajax('dompet/ubahStatus/' + data_id, 
-            {
-                    success: function (res) {// success callback function
-                      tabel.ajax.reload(null, false)
-                    }
-                  }
-                  )  
+      });
+
+
+    });
+
+    $('body').on('click','#tombol_ubah_status',  function () {
+      let data_id = $(this).data('id');
+      const _c = confirm('Apakah anda yakin?')
+      if (_c==true) {
+        $.ajax('dompet/ubahStatus/' + data_id, 
+        {
+        success: function (res) {// success callback function
+            tabel.ajax.reload(null, false)
           }
+        })  
+      }
+
+
+    })
+
+    $('#cb-head').change(function(){
+      if($(this).is(':checked')){
+        $('[id="cb-child"]').prop("checked", true);//'[id="cb-child"]' untuk mengambil semua item yang memiliki id cb-child
+        $('#ubah-status').prop('disabled', false)
+        $('#aktifkan').prop('disabled', false)
+      }else{
+        $('[id="cb-child"]').prop("checked", false);
+        $('#ubah-status').prop('disabled', true)
+        $('#aktifkan').prop('disabled', true)
+      }
+    });
+
+    $("#example").on('click','#cb-child',function(){
+      let datas = []
+      let data_id = $(this).data('id')
+      datas.push(data_id)
+      if($(this).prop('checked')!=true){
+        $("#cb-head").prop('checked',false)
+      }
+
+      let semua_checked = $("#example #cb-child:checked")
+      if(semua_checked.length > 0){
+        $('#ubah-status').prop('disabled', false)
+        $('#aktifkan').prop('disabled', false)
+      }else{
+        $('#ubah-status').prop('disabled', true)
+        $('#aktifkan').prop('disabled', true)
+      }
+      $('#ubah-status').on('click', function(){
+        $.each(datas, function(i, val){
+          $.ajax({
+            url : "/dompet/ubahStatus/"+ val ,
+            type: "GET",
+            success: function (res) {// success callback function
+              tabel.ajax.reload(null, false)
+            }
           
-
+          })  
         })
+        
+      })
+    })
 
-        $('#cb-head').change(function(){
-          if($(this).is(':checked')){
-            $('[id="cb-child"]').prop("checked", true);//'[id="cb-child"]' untuk mengambil semua item yang memiliki id cb-child
-
-          }else{
-            $('[id="cb-child"]').prop("checked", false);
-          }
-        });
-
-        // $('#example').change(function(){
-        //   alert("halo");
-        // })        
-        $("#example").on('click','.cb-child',function(){
-          if($(this).prop('checked')!=true){
-            $("#cb-head").prop('checked',false)
-          }
-          // let semua_checkbox = $("#table tbody .cb-child:checked")
-          // let button_non_aktif_status = (semua_checkbox.length>0)
-          // let button_export_terpilih_status = button_non_aktif_status;
-          // $("#button-nonaktif-all,#button-export-terpilih").prop('disabled',!button_non_aktif_status)
-          // $("#button-aktif-all,#button-export-terpilih").prop('disabled',!button_non_aktif_status)
-        })
-
-      } );
-    </script>
-    @endsection
+  } );
+</script>
+@endsection
