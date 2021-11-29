@@ -22,7 +22,14 @@ class DompetController extends Controller
             'dompets.referensi as referensi',
             'dompets.deskripsi as deskripsi',
             'dompet_status.nama as status'
-        )->get();
+        );
+        // dump('hai');
+        if($request->input('status')!=null){
+            // $dompet->where('dompets.status_id', $request->status)->get();
+            dump('hai');
+        }else{
+            $dompet->get();
+        }
 
         if ($request->ajax()) {
             return Datatables()->of($dompet)
@@ -48,7 +55,7 @@ class DompetController extends Controller
             })->rawColumns(['cb', 'aksi'])
             ->make();
         }
-
+        // dd($request->input('status'));
         return view('master.dompet.dompet', ['dompet'=>$dompet, 'PARENTTAG'=>'master', 'CHILDTAG'=>'dompet']);
     }
 

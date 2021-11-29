@@ -73,13 +73,18 @@
 @section('scripttambahan')
 <script>
   let yangDiCheck = 0;
+  let statusfiltered = $('#filterStatus').val()
   $(document).ready(function() {
     const tabel = $('#example').DataTable({
       serverSide: true,
       processing: true,
       ajax: {
         url:  "{{route('dompetindex')}}",
-        type: "GET"
+        type: "GET",
+        data : function(d){ //untuk mengirim data ke controller, nanti ngambilnya dengan $request->input('status')
+          d.statusfiltered = statusfiltered
+          return d
+        },
       },
       autowidth : true,
       columns:[
@@ -177,11 +182,13 @@
       let datas = []
       let data_id = $(this).data('id')
       datas.push(data_id)
+
       if($(this).prop('checked')!=true){
         $("#cb-head").prop('checked',false)
       }
 
       let semua_checked = $("#example #cb-child:checked")
+
       if(semua_checked.length > 0){
         $('#ubah-status').prop('disabled', false)
         $('#aktifkan').prop('disabled', false)
@@ -189,6 +196,7 @@
         $('#ubah-status').prop('disabled', true)
         $('#aktifkan').prop('disabled', true)
       }
+
       $('#ubah-status').on('click', function(){
         $.each(datas, function(i, val){
           $.ajax({
@@ -204,6 +212,14 @@
       })
     })
 
+      $('#filterStatus').on('change', function(){
+        statusfiltered = $('#filterStatus').val()
+        console.log(statusfiltered)
+        tabel.ajax.reload(null, false) //setiap kali filter berubah maka tabelnya reload
+      })
+
   } );
+
+
 </script>
 @endsection
