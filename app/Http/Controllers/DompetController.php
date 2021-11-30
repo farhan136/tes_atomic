@@ -23,12 +23,11 @@ class DompetController extends Controller
             'dompets.deskripsi as deskripsi',
             'dompet_status.nama as status'
         );
-        // dump('hai');
-        if($request->input('status')!=null){
-            // $dompet->where('dompets.status_id', $request->status)->get();
-            dump('hai');
+        if($request->input('statusfiltered')!=null){
+            $dompet = $dompet->where('dompets.status_id', $request->statusfiltered)->get();
+            
         }else{
-            $dompet->get();
+            $dompet = $dompet->get();
         }
 
         if ($request->ajax()) {

@@ -35,7 +35,23 @@
 </div>
 @endif
 
-
+<div class="row">
+  <div class="col-md-4">
+    <label>
+      <input type="checkbox" data-kolom="1" id="tampilan-nama" name="tampilan" checked="true">Nama</input>
+    </label>
+  </div>
+  <div class="col-md-4">
+    <label>
+      <input checked="true" type="checkbox" data-kolom="2" id="tampilan-referensi" name="tampilan">Referensi</input>  
+    </label>
+  </div>
+  <div class="col-md-4">
+    <label>
+      <input type="checkbox" checked="true" data-kolom="3" id="tampilan-deskripsi" name="tampilan">Deskripsi</input>  
+    </label>
+  </div>
+</div>
 
 <div class="card">
   <div class="card-header">
@@ -45,20 +61,23 @@
   </div>
 
   <div class="card-body">
-    <table id="example" class="table table-bordered table-striped">
-      <thead>
-        <tr>
-          <th>
-            <input type="checkbox" name="cb-head" id="cb-head">
-          </th>
-          <th>Nama</th>
-          <th>Referensi</th>
-          <th>Deskripsi</th>
-          <th>Status</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-    </table>
+    <div class="table-responsive">
+      <table id="example" class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>
+              <input type="checkbox" name="cb-head" id="cb-head">
+            </th>
+            <th>Nama</th>
+            <th>Referensi</th>
+            <th>Deskripsi</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+      </table>  
+    </div>
+    
   </div>
 </div>
 
@@ -73,6 +92,9 @@
 @section('scripttambahan')
 <script>
   let yangDiCheck = 0;
+  let tampilnama = 0;
+  let tampildeskripsi = 0;
+  let tampilreferensi = 0;
   let statusfiltered = $('#filterStatus').val()
   $(document).ready(function() {
     const tabel = $('#example').DataTable({
@@ -81,22 +103,25 @@
       ajax: {
         url:  "{{route('dompetindex')}}",
         type: "GET",
-        data : function(d){ //untuk mengirim data ke controller, nanti ngambilnya dengan $request->input('status')
-          d.statusfiltered = statusfiltered
-          return d
-        },
+        data : function(d){ //untuk mengirim data ke controller, nanti ngambilnya dengan $request->input('statusfiltered')
+        d.statusfiltered = statusfiltered
+        d.tampilnama = tampilnama
+        d.tampilreferensi = tampilreferensi
+        d.tampildeskripsi = tampildeskripsi
+        return d
       },
-      autowidth : true,
-      columns:[
-      { data :"cb", name: "cb-head", searchable:false, sortable:false},
-      { data :"nama", name: "nama"},
-      { data :"referensi", name: "referensi"},
-      { data :"deskripsi", name: "deskripsi"},
-      { data :"status", name: "status"},
-      { data :"aksi", name: "aksi", searchable:false, sortable:false},
-      ],
-      lengthMenu:[[10,15,25, -1], ["splh","lmbls","dwplhlm", "semua"]],
-    });
+    },
+    autowidth : true,
+    columns:[
+    { data :"cb", name: "cb-head", searchable:false, sortable:false},
+    { data :"nama", name: "nama"},
+    { data :"referensi", name: "referensi"},
+    { data :"deskripsi", name: "deskripsi"},
+    { data :"status", name: "status"},
+    { data :"aksi", name: "aksi", searchable:false, sortable:false},
+    ],
+    lengthMenu:[[10,15,25, -1], ["splh","lmbls","dwplhlm", "semua"]],
+  });
 
     $('#form-create').on('submit', function(e){ //jika form-create di submit maka jalankan function berikut
       e.preventDefault();
@@ -158,9 +183,9 @@
         $.ajax('dompet/ubahStatus/' + data_id, 
         {
         success: function (res) {// success callback function
-            tabel.ajax.reload(null, false)
-          }
-        })  
+          tabel.ajax.reload(null, false)
+        }
+      })  
       }
 
 
@@ -205,18 +230,32 @@
             success: function (res) {// success callback function
               tabel.ajax.reload(null, false)
             }
-          
+
           })  
         })
         
       })
     })
 
-      $('#filterStatus').on('change', function(){
-        statusfiltered = $('#filterStatus').val()
-        console.log(statusfiltered)
+    $('#filterStatus').on('change', function(){
+      statusfiltered = $('#filterStatus').val()
+      console.log(statusfiltered)
         tabel.ajax.reload(null, false) //setiap kali filter berubah maka tabelnya reload
       })
+
+    $('[name="tampilan"]').change(function(){
+      if ($('#tampilan-nama').props('checked', true)) {
+        tampilnama = $(this).data('kolom')
+      }
+      if ($('#tampilan-deskripsi').props('checked', true)) {
+        tampildeskripsi = $(this).data('kolom') 
+      }
+      if ($('#tampilan-referensi').props('checked', true)) {
+        tampilreferensi = $(this).data('kolom')
+      }
+      tabel.ajax.reload(null, false);
+
+    })
 
   } );
 
