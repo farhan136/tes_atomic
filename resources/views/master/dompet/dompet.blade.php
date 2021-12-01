@@ -61,7 +61,7 @@
   </div>
 
   <div class="card-body">
-    <div class="table-responsive">
+    <div class="tabel-responsive">
       <table id="example" class="table table-bordered table-striped">
         <thead>
           <tr>
@@ -92,9 +92,6 @@
 @section('scripttambahan')
 <script>
   let yangDiCheck = 0;
-  let tampilnama = 0;
-  let tampildeskripsi = 0;
-  let tampilreferensi = 0;
   let statusfiltered = $('#filterStatus').val()
   $(document).ready(function() {
     const tabel = $('#example').DataTable({
@@ -105,23 +102,20 @@
         type: "GET",
         data : function(d){ //untuk mengirim data ke controller, nanti ngambilnya dengan $request->input('statusfiltered')
         d.statusfiltered = statusfiltered
-        d.tampilnama = tampilnama
-        d.tampilreferensi = tampilreferensi
-        d.tampildeskripsi = tampildeskripsi
         return d
+        },
       },
-    },
-    autowidth : true,
-    columns:[
-    { data :"cb", name: "cb-head", searchable:false, sortable:false},
-    { data :"nama", name: "nama"},
-    { data :"referensi", name: "referensi"},
-    { data :"deskripsi", name: "deskripsi"},
-    { data :"status", name: "status"},
-    { data :"aksi", name: "aksi", searchable:false, sortable:false},
-    ],
-    lengthMenu:[[10,15,25, -1], ["splh","lmbls","dwplhlm", "semua"]],
-  });
+      autowidth : true,
+      columns:[
+      { data :"cb", name: "cb-head", searchable:false, sortable:false},
+      { data :"nama", name: "nama"},
+      { data :"referensi", name: "referensi"},
+      { data :"deskripsi", name: "deskripsi"},
+      { data :"status", name: "status"},
+      { data :"aksi", name: "aksi", searchable:false, sortable:false},
+      ],
+      lengthMenu:[[10,15,25, -1], ["splh","lmbls","dwplhlm", "semua"]],
+    });
 
     $('#form-create').on('submit', function(e){ //jika form-create di submit maka jalankan function berikut
       e.preventDefault();
@@ -244,16 +238,12 @@
       })
 
     $('[name="tampilan"]').change(function(){
-      if ($('#tampilan-nama').props('checked', true)) {
-        tampilnama = $(this).data('kolom')
-      }
-      if ($('#tampilan-deskripsi').props('checked', true)) {
-        tampildeskripsi = $(this).data('kolom') 
-      }
-      if ($('#tampilan-referensi').props('checked', true)) {
-        tampilreferensi = $(this).data('kolom')
-      }
-      tabel.ajax.reload(null, false);
+
+      // Get the column API object
+      var column = tabel.column( $(this).attr('data-kolom') );
+      
+      // Toggle the visibility
+      column.visible( ! column.visible() );
 
     })
 
