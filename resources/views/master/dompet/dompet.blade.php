@@ -129,7 +129,6 @@
 
     });
 
-    //TOMBOL EDIT DATA PER PEGAWAI DAN TAMPIKAN DATA BERDASARKAN ID PEGAWAI KE MODAL
     //ketika id tombol_edit yang ada pada tag body di klik maka
     $('body').on('click', '#tombol_edit', function () {
       let data_id = $(this).data('id'); //mengambil id yang dikirim dari atribut data-id
@@ -229,6 +228,7 @@
         })
         
       })
+      
     })
 
     $('#filterStatus').on('change', function(){
