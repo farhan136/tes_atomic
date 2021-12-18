@@ -12,11 +12,6 @@ use Maatwebsite\Excel\Validators\Failure;
 class DompetsImport implements ToModel, WithHeadingRow, WithValidation
 
 {
-    /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
     public function model(array $row)
     {
         return new Dompet([

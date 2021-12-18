@@ -126,8 +126,43 @@
             tabel.ajax.reload(); //reload datatable
           }
         })
-
     });
+
+    //validasi form tambah
+    var validator = $('#form-create').validate({
+      errorElement: "em",
+      errorClass: "error",
+      rules:
+        {
+          nama: {
+            required: true,
+            maxlength: 5
+          },
+          referensi:{
+            maxlength: 255
+          },
+          deskripsi:{
+            maxlength: 255
+          }
+        },
+      messages: {
+        nama: {
+          required: "Gaboleh Kosong",
+          maxlength: "Tidak boleh lebih dari 5"
+        },
+        referensi:{
+          maxlength: "Tidak boleh lebih dari 255"
+        },
+        deskripsi:{
+          maxlength: "Tidak boleh lebih dari 255"
+        }
+      }
+    });
+
+    $('#tutupModal').on('click', function(){
+      $('#form-create').trigger("reset");
+      validator.destroy();
+    })
 
     //ketika id tombol_edit yang ada pada tag body di klik maka
     $('body').on('click', '#tombol_edit', function () {

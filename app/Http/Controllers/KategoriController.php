@@ -21,7 +21,7 @@ class KategoriController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama' => 'required|max:5',
+            'nama' => 'required',
             'deskripsi'=>'max:255',
             'status'=>'required'
         ]);
@@ -50,7 +50,7 @@ class KategoriController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'nama' => 'required|max:5',
+            'nama' => 'required',
             'deskripsi'=>'max:255',
             'status'=>'required'
         ]);

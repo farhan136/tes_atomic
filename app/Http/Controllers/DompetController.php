@@ -25,7 +25,6 @@ class DompetController extends Controller
         );
         if($request->input('statusfiltered')!=null){
             $dompet = $dompet->where('dompets.status_id', $request->statusfiltered)->get();
-            
         }else{
             $dompet = $dompet->get();
         }
@@ -54,7 +53,6 @@ class DompetController extends Controller
             })->rawColumns(['cb', 'aksi'])
             ->make();
         }
-        // dd($request->input('status'));
         return view('master.dompet.dompet', ['dompet'=>$dompet, 'PARENTTAG'=>'master', 'CHILDTAG'=>'dompet']);
     }
 
@@ -66,7 +64,7 @@ class DompetController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama' => 'required|max:5',
+            'nama' => 'required',
             'deskripsi'=>'max:255',
             'status'=>'required'
         ]);
@@ -88,12 +86,6 @@ class DompetController extends Controller
         return view('master.dompet.detail', ['dompet'=>$dompet, 'PARENTTAG'=>'master', 'CHILDTAG'=>'dompet']);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $dompet = Dompet::find($id);
@@ -104,7 +96,7 @@ class DompetController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'nama' => 'required|max:5',
+            'nama' => 'required',
             'deskripsi'=>'max:255',
             'status'=>'required'
         ]);

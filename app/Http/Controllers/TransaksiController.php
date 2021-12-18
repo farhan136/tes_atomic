@@ -10,7 +10,6 @@ class TransaksiController extends Controller
 {
     public function index2($kdstatus)
     {
-        
         if($kdstatus != 0){
             $status = $kdstatus;
         }else{
@@ -44,7 +43,6 @@ class TransaksiController extends Controller
     public function store(Request $request)
     {
         //Memambahkan dompet masuk dan dompet keluar hanya dari 1 form, akan dikondisikan dibawah
-
         $validated = $request->validate([
             'nilai' => 'required|numeric|min:0',
             'deskripsi'=>'max:255',
