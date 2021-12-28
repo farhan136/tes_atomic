@@ -60,6 +60,7 @@ class TransaksiController extends Controller
             $code = "WOUT";
         }
 
+        // generate kode
         $count = DB::table('transaksis')->where('kode', 'like', $code."%")->count() + 1;
         $count = str_pad($count, 6, "0", STR_PAD_LEFT) ;
         $code = $code . $count++;

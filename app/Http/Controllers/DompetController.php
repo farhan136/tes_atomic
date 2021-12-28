@@ -37,12 +37,13 @@ class DompetController extends Controller
                 <button class="btn btn-secondary tombol'.$item->id.'" data-toggle="modal" data-target="#editModal" id="tombol_edit" data-id="'.$item->id.'">
                 <i class="fas fa-pen"></i>
                 </button>
-                <a href="'. route('dompet.show', $item->id) .'" class="btn btn-secondary">
-                <i class="fas fa-search"></i>
-                </a>
                 <button class="btn btn-secondary" data-id="'.$item->id.'" id="tombol_ubah_status"> 
                 <i class="fas fa-times"></i>
                 </button>
+                <button class="btn btn-danger" data-toggle="modal" data-target="#modal-hapus" data-id="'.$item->id.'" id="tombol-hapus">
+                  Hapus
+                </button>
+
                 ';
             })->addColumn('cb', function($item){
 
@@ -76,8 +77,7 @@ class DompetController extends Controller
         $dompet->status_id = $request->status;
         $dompet->save();
         
-        
-        return response()->json(true);   
+        return response()->json('berhasil');
     }
 
     public function show($id)
@@ -151,5 +151,26 @@ class DompetController extends Controller
     public function export() 
     {
         return Excel::download(new DompetsExport, 'dompet.xlsx');
+    }
+
+    public function destroy($id)
+    {
+        $dompet = Dompet::find($id);
+        $transaksi = Transaksi::where('dompet_id', $id)->firstOrFail();
+
+        if($transaksi){
+            $transaksi->delete();
+        }
+        $dompet->delete();        
+        
+        if($dompet){
+            return response()->json([
+                'status' => 'success'
+            ]);
+        }else{
+            return response()->json([
+                'status' => 'error'
+            ]);
+        }
     }
 }

@@ -85,6 +85,8 @@
 
 @include('master.dompet.ubah')
 
+@include('master.dompet.hapus')
+
 @include('master.dompet.importexcel')
 
 @endsection  
@@ -117,7 +119,7 @@
       lengthMenu:[[10,15,25, -1], ["splh","lmbls","dwplhlm", "semua"]],
     });
 
-    $('#form-create').on('submit', function(e){ //jika form-create di submit maka jalankan function berikut
+    $('#tambah-dompet').on('click', function(e){ //jika form-create di submit maka jalankan function berikut
       e.preventDefault();
       $('#form-create').ajaxSubmit({
         success:function(res){
@@ -126,6 +128,8 @@
             tabel.ajax.reload(); //reload datatable
           }
         })
+      $('#tutupModal').trigger('click'); //tutup modal
+      tabel.ajax.reload(); //reload datatable
     });
 
     //validasi form tambah
@@ -136,7 +140,7 @@
         {
           nama: {
             required: true,
-            maxlength: 5
+            maxlength: 255
           },
           referensi:{
             maxlength: 255
@@ -182,14 +186,12 @@
 
         $('#form-edit').on('submit', function(e){ //jika form-edit di submit maka jalankan function berikut
           e.preventDefault();
-
           // $.post({
           //   url: 'dompet/dompet/' + data_id, //post data ke url
           //   success: function(res){
           //     $('#form-edit').trigger("reset"); //mereset data form setelah mengirim data ke database
           //     $('#tutupModal').trigger('click');
           //   }});
-
           $('#form-edit').ajaxSubmit({
             success:function(res){
               $('#form-edit').trigger("reset"); //mereset data form setelah mengirim data ke database
@@ -197,11 +199,10 @@
               tabel.ajax.reload();
             }
           })
+
         });
 
       });
-
-
     });
 
     $('body').on('click','#tombol_ubah_status',  function () {
@@ -215,8 +216,6 @@
         }
       })  
       }
-
-
     })
 
     $('#cb-head').change(function(){
@@ -262,8 +261,7 @@
           })  
         })
         
-      })
-      
+      })   
     })
 
     $('#filterStatus').on('change', function(){
@@ -279,8 +277,34 @@
       
       // Toggle the visibility
       column.visible( ! column.visible() );
-
     })
+
+    $('body').on('click', '#tombol-hapus', function () {
+      let data_id = $(this).data('id');
+      let token = $("meta[name='csrf-token']").attr("content");
+      console.log(data_id)
+      
+      $('#submit-hapus-dompet').on('click', function(e){
+        $.ajax({
+            url:"{{url('dompet/dompet')}}"+"/"+data_id,
+            type : "DELETE",
+            method: "DELETE",
+            data:{
+             _token : token
+            },
+            success:function(res){
+              if(res.status=="success"){
+                tabel.ajax.reload();
+                $('#tombol-tutup').trigger('click');
+              }else{
+                console.log("gagal")
+              }
+            }
+        }) 
+      })
+
+
+    });
 
   } );
 

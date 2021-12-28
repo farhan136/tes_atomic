@@ -3,8 +3,8 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="closemodal">Buat Baru</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="tutupModal">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" id="tutupModal">&times;</span>
         </button>
       </div>
       <div class="modal-body">
@@ -52,7 +52,7 @@
               </div>
             </div>
           </fieldset>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-primary" id="tambah-dompet">Submit</button>
         </form>
 
 
