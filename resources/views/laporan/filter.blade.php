@@ -25,18 +25,18 @@
       <select name="kategori" class="btn btn-secondary">
         <option value=""  selected>Kategori</option>
         @foreach($kategori as $k)
-        <option value="{{$k->id}}">Kategori {{$k->nama}}</option>
+        <option value="{{$k->id}}">{{$k->nama}}</option>
         @endforeach
       </select>
 
       <select name="dompet" class="btn btn-secondary">
         <option value=""  selected>Dompet</option>
         @foreach($dompet as $d)
-        <option value="{{$d->id}}">Dompet {{$d->nama}}</option>
+        <option value="{{$d->id}}">{{$d->nama}}</option>
         @endforeach
       </select>
 
-      <select name="dompet" class="btn btn-secondary">
+      <select name="status" class="btn btn-secondary">
         <option value=""  selected>Status</option>
         <option value="1">Masuk</option>
         <option value="2">Keluar</option>

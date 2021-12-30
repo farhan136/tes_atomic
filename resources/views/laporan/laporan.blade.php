@@ -28,8 +28,8 @@
           <td>{{$f->tanggal}}</td>
           <td>{{$f->kode}}</td>
           <td>{{$f->deskripsi}}</td>
-          <td>Dompet {{$f->dompet}}</td>
-          <td>Kategori {{$f->kategori}}</td>
+          <td>{{$f->dompet}}</td>
+          <td>{{$f->kategori}}</td>
           <td>
             @if($f->status_id == 1)
             (+) {{$f->nilai}}
@@ -40,22 +40,12 @@
         </tr>
         @endforeach
       </tbody>
-      <a class="btn btn-primary">Print</a><a href="{{url('transaksi/filter')}}" class="btn btn-secondary">Kembali</a>
+      <a href="{{url('transaksi/filter')}}" class="btn btn-secondary">Kembali</a>
     </table>
     <div class="card-footer text-muted">
-      Total = 
+      Total = {{$total}}
     </div>
   </div>
 </div>
 
-@endsection  
-@section('scripttambahan')
-<script>
-  $(document).ready(function() {
-    $('#example').DataTable({
-
-    });
-
-  } );
-</script>
 @endsection

@@ -28,6 +28,7 @@ Route::group(['middleware'=>'auth'], function(){ //yang berada didalam group ini
 		Route::get('index/{id}', 'App\Http\Controllers\transaksiController@index2');
 		Route::get('filter', 'App\Http\Controllers\transaksiController@filter');
 		Route::post('filter', 'App\Http\Controllers\transaksiController@filterTransaksi')->name('transaksi.filter');
+		// Route::get('cetak-pdf', 'App\Http\Controllers\transaksiController@cetak_pdf');
 	});
 
 	Route::get('tambahDompetMasuk', 'App\Http\Controllers\TransaksiController@create');
